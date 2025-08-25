@@ -653,6 +653,32 @@ func (s *ChangesService) QueryChanges(ctx context.Context, opt *QueryChangeOptio
 	return v, resp, err
 }
 
+func (s *ChangesService) QueryChangesForMultyQuery(ctx context.Context, opt *QueryChangeOptions) (*[]ChangeInfo, *Response, error) {
+	u := "changes/"
+
+	u, err := addOptions(u, opt)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest(ctx, "GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	v := new([][]ChangeInfo)
+	resp, err := s.client.Do(req, v)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	res := make([]ChangeInfo, len(*v))
+	for _, val := range *v {
+		res = append(res, val...)
+	}
+	return &res, resp, err
+}
+
 // GetChange retrieves a change.
 // Additional fields can be obtained by adding o parameters, each option requires more database lookups and slows down the query response time to the client so they are generally disabled by default.
 //
