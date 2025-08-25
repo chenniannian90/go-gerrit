@@ -1,4 +1,4 @@
-module go-gerrit
+module github.com/chenniannian90/go-gerrit
 
 go 1.16
 
